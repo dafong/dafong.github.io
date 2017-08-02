@@ -5,17 +5,25 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Tue, 18 Jul 2017 15:10:26 +0800</pubDate>
-    <lastBuildDate>Tue, 18 Jul 2017 15:10:26 +0800</lastBuildDate>
+    <pubDate>Wed, 02 Aug 2017 12:07:41 +0800</pubDate>
+    <lastBuildDate>Wed, 02 Aug 2017 12:07:41 +0800</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
     
       <item>
         <title>博客重开</title>
-        <description>&lt;p&gt;之前自己弄的&lt;/p&gt;
+        <description>&lt;p&gt;折腾了几次空间以后终于把之前的Blog给折腾没了，之所以折腾来折腾去最主要的原因还是为了跟“墙“作斗争，买来的VPN比起租VPS来虽说是惠而不费，但是身为一个搞技术的，多多少少还是用自己一手搭建起来的舒服，况且有个VPS还能搞一些其他的事情。&lt;/p&gt;
+
+&lt;p&gt;最早我都是用&lt;a href=&quot;http://www.linode.com&quot;&gt;linode&lt;/a&gt;的VPS，用了也有快两年有余吧，东京节点，一直都是相安无事的，无奈后来是树大招风，最终是给ban掉了。老佟给我推荐过美国的&lt;a href=&quot;https://bandwagonhost.com/&quot;&gt;搬瓦工&lt;/a&gt;，我在家试了试速度一般，后来选了还是日本的一家服务商Conoha，感觉还比较稳定，有英文界面而且可以支付宝，下面献上我的&lt;a href=&quot;https://www.conoha.jp/referral/?token=tnxbDQs63VG1lAOJmeJWWGnLQuHZWktF.YObnv71v3LxKj8xGXw-U4E&quot;&gt;referral link&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;原来的Blog主要是记录一些技术方面的问(cai)题(keng)和解(tian)决(keng)过程做个备忘，后来项目一忙以后经常来不及更新，最近发现有的问题明明碰到过也解决过，但是却忘了是怎么搞得来了，所以还是需要这么个地儿，技术人员在github.io上写博客似乎是很流行的事了，所以我也从网上搜了几篇文章然后把这个Blog给弄出来了。&lt;/p&gt;
+
+&lt;p&gt;以上就算是开篇吧。&lt;/p&gt;
 </description>
         <pubDate>Wed, 12 Jul 2017 20:00:00 +0800</pubDate>
         <link>http://localhost:4000/2017/07/12/hello-blog/</link>
         <guid isPermaLink="true">http://localhost:4000/2017/07/12/hello-blog/</guid>
+        
+        <category>随便写写</category>
         
         
       </item>
