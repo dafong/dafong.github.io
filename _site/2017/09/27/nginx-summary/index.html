@@ -10,7 +10,7 @@
     <meta name="keywords"  content="">
     <meta name="theme-color" content="#000000">
     
-    <title>Dafone的博客 | Dafone的博客 Blog1</title>
+    <title>Nginx小记 - Dafone的博客 | Dafone的博客 Blog1</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2017/09/27/nginx-summary/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -153,140 +153,194 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/')
+    }
+
+    
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, 0.3);
+    }
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Dafong Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading"></span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#openresty" title="openresty">openresty</a>
+                        
+                    </div>
+                    <h1>Nginx小记</h1>
+                    
+                    
+                    <h2 class="subheading"></h2>
+                    
+                    <span class="meta">Posted by Dafong on September 27, 2017</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-        
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2017/09/27/nginx-summary/">
-        <h2 class="post-title">
-            Nginx小记
-        </h2>
-        
-        <h3 class="post-subtitle">
-            
-        </h3>
-        
-        <div class="post-content-preview">
-            研究openresty的时候准备自己写一个简单的web framework,以前对nginx的location匹配规则,以及如何在脚本这一端实现一套restful风格的url路由都没有细研究过，这次也算是做个记录。
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-nginx location 匹配规则
+				<p>研究<a href="https://openresty.org">openresty</a>的时候准备自己写一个简单的web framework,以前对nginx的location匹配规则,以及如何在脚本这一端实现一套restful风格的url路由都没有细研究过，这次也算是做个记录。</p>
 
+<h3 id="nginx-location-匹配规则">nginx location 匹配规则</h3>
 
-  
-    
-      sytax
-      define
-    
-  
-  
-    
-      =
-      精确匹...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Dafong on September 27, 2017
-    </p>
+<table>
+  <thead>
+    <tr>
+      <th style="text-align: center">sytax</th>
+      <th style="text-align: center">define</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td style="text-align: center">=</td>
+      <td style="text-align: center">精确匹配</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">prefix string</td>
+      <td style="text-align: center">nginx最优先检查,最长匹配的被作为候选</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">^~</td>
+      <td style="text-align: center">前缀匹配，如果存在最长的匹配则不检查后面的正则匹配</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">~</td>
+      <td style="text-align: center">大小写敏感的正则匹配</td>
+    </tr>
+    <tr>
+      <td style="text-align: center">~*</td>
+      <td style="text-align: center">大小写不敏感的正则匹配</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>所以总结起来的优先级就是</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>= &gt; ^~ &gt; ~ = ~* &gt; prefix string
+</code></pre>
 </div>
-<hr>
 
-<div class="post-preview">
-    <a href="/2017/07/12/hello-blog/">
-        <h2 class="post-title">
-            博客重开
-        </h2>
-        
-        <h3 class="post-subtitle">
-            
-        </h3>
-        
-        <div class="post-content-preview">
-            折腾了几次空间以后终于把之前的Blog给折腾没了，之所以折腾来折腾去最主要的原因还是为了跟“墙“作斗争，买来的VPN比起租VPS来虽说是惠而不费，但是身为一个搞技术的，多多少少还是用自己一手搭建起来的舒服，况且有个VPS还能搞一些其他的事情。
+<p>同为正则匹配的~和~*，匹配的优先级按照在配置文档中出现的顺序决定。</p>
 
-最早我都是用linode的VPS，用了也有快两年有余吧，东京节点，一直都是相安无事的，无奈后来是树大招风，最终是给ban掉了。老佟给我推荐过美国的搬...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Dafong on July 12, 2017
-    </p>
+<div class="language-nginx highlighter-rouge"><pre class="highlight"><code><span class="k">location</span> <span class="p">=</span> <span class="n">/</span> <span class="p">{</span>
+    <span class="kn">[</span> <span class="s">configuration</span> <span class="s">A</span> <span class="s">]</span>
+<span class="err">}</span>
+
+<span class="s">location</span> <span class="n">/</span> <span class="p">{</span>
+    <span class="kn">[</span> <span class="s">configuration</span> <span class="s">B</span> <span class="s">]</span>
+<span class="err">}</span>
+
+<span class="s">location</span> <span class="n">/documents/</span> <span class="p">{</span>
+    <span class="kn">[</span> <span class="s">configuration</span> <span class="s">C</span> <span class="s">]</span>
+<span class="err">}</span>
+
+<span class="s">location</span> <span class="s">^~</span> <span class="n">/images/</span> <span class="p">{</span>
+    <span class="kn">[</span> <span class="s">configuration</span> <span class="s">D</span> <span class="s">]</span>
+<span class="err">}</span>
+
+<span class="s">location</span> <span class="p">~</span><span class="sr">*</span> <span class="err">\</span><span class="s">.(gif|jpg|jpeg)</span>$ <span class="p">{</span>
+    <span class="kn">[</span> <span class="s">configuration</span> <span class="s">E</span> <span class="s">]</span>
+<span class="err">}</span>
+</code></pre>
 </div>
-<hr>
+
+<ul>
+  <li>”/” 会被精确匹配到A。</li>
+  <li>“/index.html”不符合所有正则匹配的规则，所以采用规则C。</li>
+  <li>“/documents/document.html”,符合prefix string 里的规则B和规则C，但是根据最长匹配原则会匹配到C。</li>
+  <li>“/images/1.gif” 符合B和D，因为前缀匹配的优先级更高，所以匹配到D。</li>
+  <li>“/documents/1.jpg”符合B,C,E,因为E的优先级更高，所以会匹配到E。</li>
+</ul>
+
+<p>###</p>
 
 
-<!-- Pager -->
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/07/12/hello-blog/" data-toggle="tooltip" data-placement="top" title="博客重开">
+                        Previous<br>
+                        <span>博客重开</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
 
 
-    		</div>
+                
+
+                
+            </div>
+
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
+
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                        
+        				
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                        
-                            <p>Test111</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                        </ul>
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -295,10 +349,53 @@ nginx location 匹配规则
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->
@@ -409,6 +506,50 @@ nginx location 匹配规则
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 

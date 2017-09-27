@@ -9,7 +9,7 @@ url: ""              # your host, for absolute URL
 baseurl: ""                             # for example, '/blog' if your blog hosted on 'host/blog'
 
 
-
+timezone: CN
 # SNS settings
 RSS: false
 #weibo_username:     huxpro
@@ -48,7 +48,7 @@ kramdown:
 
 
 # Disqus settings
-disqus_username: 
+disqus_username:
 
 # Netease setttings
 netease_comment: false

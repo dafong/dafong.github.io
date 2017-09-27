@@ -5,9 +5,95 @@
     <description></description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Wed, 02 Aug 2017 12:07:41 +0800</pubDate>
-    <lastBuildDate>Wed, 02 Aug 2017 12:07:41 +0800</lastBuildDate>
+    <pubDate>Wed, 27 Sep 2017 11:53:45 +0000</pubDate>
+    <lastBuildDate>Wed, 27 Sep 2017 11:53:45 +0000</lastBuildDate>
     <generator>Jekyll v3.5.1</generator>
+    
+      <item>
+        <title>Nginx小记</title>
+        <description>&lt;p&gt;研究&lt;a href=&quot;https://openresty.org&quot;&gt;openresty&lt;/a&gt;的时候准备自己写一个简单的web framework,以前对nginx的location匹配规则,以及如何在脚本这一端实现一套restful风格的url路由都没有细研究过，这次也算是做个记录。&lt;/p&gt;
+
+&lt;h3 id=&quot;nginx-location-匹配规则&quot;&gt;nginx location 匹配规则&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;sytax&lt;/th&gt;
+      &lt;th style=&quot;text-align: center&quot;&gt;define&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;=&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;精确匹配&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;prefix string&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;nginx最优先检查,最长匹配的被作为候选&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;^~&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;前缀匹配，如果存在最长的匹配则不检查后面的正则匹配&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;~&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;大小写敏感的正则匹配&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;~*&lt;/td&gt;
+      &lt;td style=&quot;text-align: center&quot;&gt;大小写不敏感的正则匹配&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;所以总结起来的优先级就是&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;= &amp;gt; ^~ &amp;gt; ~ = ~* &amp;gt; prefix string
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;同为正则匹配的~和~*，匹配的优先级按照在配置文档中出现的顺序决定。&lt;/p&gt;
+
+&lt;div class=&quot;language-nginx highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;configuration&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;A&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;configuration&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;B&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/documents/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;configuration&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;C&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;^~&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;/images/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;configuration&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;D&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;s&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;\&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.(gif|jpg|jpeg)&lt;/span&gt;$ &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kn&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;configuration&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;E&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;err&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;”/” 会被精确匹配到A。&lt;/li&gt;
+  &lt;li&gt;“/index.html”不符合所有正则匹配的规则，所以采用规则C。&lt;/li&gt;
+  &lt;li&gt;“/documents/document.html”,符合prefix string 里的规则B和规则C，但是根据最长匹配原则会匹配到C。&lt;/li&gt;
+  &lt;li&gt;“/images/1.gif” 符合B和D，因为前缀匹配的优先级更高，所以匹配到D。&lt;/li&gt;
+  &lt;li&gt;“/documents/1.jpg”符合B,C,E,因为E的优先级更高，所以会匹配到E。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;###&lt;/p&gt;
+</description>
+        <pubDate>Wed, 27 Sep 2017 00:00:00 +0000</pubDate>
+        <link>http://localhost:4000/2017/09/27/nginx-summary/</link>
+        <guid isPermaLink="true">http://localhost:4000/2017/09/27/nginx-summary/</guid>
+        
+        <category>openresty</category>
+        
+        
+      </item>
     
       <item>
         <title>博客重开</title>
@@ -19,7 +105,7 @@
 
 &lt;p&gt;以上就算是开篇吧。&lt;/p&gt;
 </description>
-        <pubDate>Wed, 12 Jul 2017 20:00:00 +0800</pubDate>
+        <pubDate>Wed, 12 Jul 2017 00:00:00 +0000</pubDate>
         <link>http://localhost:4000/2017/07/12/hello-blog/</link>
         <guid isPermaLink="true">http://localhost:4000/2017/07/12/hello-blog/</guid>
         

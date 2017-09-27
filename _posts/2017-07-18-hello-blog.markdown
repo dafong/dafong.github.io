@@ -2,7 +2,7 @@
 layout:     post
 title:      "博客重开"
 subtitle:   ""
-date:       2017-07-12 12:00:00
+date:       2017-07-12
 author:     "Dafong"
 header-img: ""
 header-mask: 0.3
