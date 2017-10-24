@@ -103,7 +103,7 @@ public function getScriptUrl(){
     $scriptName = basename($scriptFile);
     if (basename($_SERVER['SCRIPT_NAME']) === $scriptName){
       $this->_scriptUrl = $_SERVER['SCRIPT_NAME'];
-    } 
+    }
      // ...省略部分代码
   }
 

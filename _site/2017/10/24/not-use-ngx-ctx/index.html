@@ -10,7 +10,7 @@
     <meta name="keywords"  content="">
     <meta name="theme-color" content="#000000">
     
-    <title>博客重开 - Dafone的博客 | Dafone的博客 Blog1</title>
+    <title>不要使用ngx.ctx - Dafone的博客 | Dafone的博客 Blog1</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2017/07/12/hello-blog/">
+    <link rel="canonical" href="http://localhost:4000/2017/10/24/not-use-ngx-ctx/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -181,15 +181,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/tags/#随便写写" title="随便写写">随便写写</a>
+                        <a class="tag" href="/tags/#openresty" title="openresty">openresty</a>
                         
                     </div>
-                    <h1>博客重开</h1>
+                    <h1>不要使用ngx.ctx</h1>
                     
                     
                     <h2 class="subheading"></h2>
                     
-                    <span class="meta">Posted by Dafong on July 12, 2017</span>
+                    <span class="meta">Posted by Dafong on October 24, 2017</span>
                 </div>
             </div>
         </div>
@@ -207,26 +207,89 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-				<p>折腾了几次空间以后终于把之前的Blog给折腾没了，之所以折腾来折腾去最主要的原因还是为了跟“墙“作斗争，买来的VPN比起租VPS来虽说是惠而不费，但是身为一个搞技术的，多多少少还是用自己一手搭建起来的舒服，况且有个VPS还能搞一些其他的事情。</p>
+				<p>openresty 由于在处理一个请求的时候是使用一个协程来处理，所以一个woker进程在同一时间内是有可能处理
+多个请求的。在实现一个简单的web框架的时候，我们避免不了要将一些数据结构绑定到一个请求的生命周期上，那
+么如何做呢？openresty官方的文档上提供了以下几种做法：</p>
 
-<p>最早我都是用<a href="http://www.linode.com">linode</a>的VPS，用了也有快两年有余吧，东京节点，一直都是相安无事的，无奈后来是树大招风，最终是给ban掉了。老佟给我推荐过美国的<a href="https://bandwagonhost.com/">搬瓦工</a>，我在家试了试速度一般，后来选了还是日本的一家服务商Conoha，感觉还比较稳定，有英文界面而且可以支付宝，下面献上我的<a href="https://www.conoha.jp/referral/?token=tnxbDQs63VG1lAOJmeJWWGnLQuHZWktF.YObnv71v3LxKj8xGXw-U4E">referral link</a></p>
+<h2 id="方法">方法</h2>
 
-<p>原来的Blog主要是记录一些技术方面的问(cai)题(keng)和解(tian)决(keng)过程做个备忘，后来项目一忙以后经常来不及更新，最近发现有的问题明明碰到过也解决过，但是却忘了是怎么搞得来了，所以还是需要这么个地儿，技术人员在github.io上写博客似乎是很流行的事了，所以我也从网上搜了几篇文章然后把这个Blog给弄出来了。</p>
+<h3 id="使用ngxvar">使用ngx.var</h3>
+<p>使用ngx.var有很大的局限，比如说这东西不能create on-the-fly，只能先在nginx的配置文件里声明一下</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set $some_var "";
+</code></pre></div></div>
+<p>另外一个支持的数据类型也只用string和number，这样显然不行。</p>
 
-<p>以上就算是开篇吧。</p>
+<h3 id="使用ngxctx">使用ngx.ctx</h3>
+<p>ngx.ctx 跟ngx.var一样，声明周期都是跟当前的请求绑定的，可以支持任意类型的数据，但代价相对昂贵。</p>
+
+<h3 id="手动传参">手动传参</h3>
+<p>简单来说就是把请求所共享的数据结构都封装到一个对象里来，然后在使用到的地方(函数调用)，当做参数传进去。</p>
+
+<h2 id="验证">验证</h2>
+
+<ul>
+  <li>
+    <p>ngx.var
+这个局限性太大了，所以不在考虑之列</p>
+  </li>
+  <li>
+    <p>ngx.ctx
+就是在一个请求内，从ctx里存取100万次数据。代码如下</p>
+  </li>
+</ul>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ngx</span><span class="p">.</span><span class="n">ctx</span><span class="p">.</span><span class="n">t</span> <span class="o">=</span> <span class="p">{</span><span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1000000</span><span class="p">,</span><span class="mi">1</span> <span class="k">do</span>
+    <span class="n">ngx</span><span class="p">.</span><span class="n">ctx</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="n">cnt</span> <span class="o">=</span> <span class="n">ngx</span><span class="p">.</span><span class="n">ctx</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+<span class="n">ngx</span><span class="p">.</span><span class="n">say</span><span class="p">(</span><span class="n">ngx</span><span class="p">.</span><span class="n">ctx</span><span class="p">.</span><span class="n">t</span><span class="p">.</span><span class="n">cnt</span><span class="p">)</span>
+
+</code></pre></div></div>
+
+<p>用ab压了一下，慢到怀疑人生啊
+Requests per second:    1.16 [#/sec] (mean)</p>
+
+<ul>
+  <li>手动传参
+作为对比，代码如下</li>
+</ul>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">local</span> <span class="n">t</span> <span class="o">=</span> <span class="p">{</span><span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1000000</span><span class="p">,</span><span class="mi">1</span> <span class="k">do</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">cnt</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+<span class="n">ngx</span><span class="p">.</span><span class="n">say</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">cnt</span><span class="p">)</span>
+</code></pre></div></div>
+<p>还有使用元表的</p>
+
+<div class="language-lua highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">local</span> <span class="n">t</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="kd">local</span> <span class="n">m</span> <span class="o">=</span> <span class="p">{</span><span class="n">cnt</span> <span class="o">=</span> <span class="mi">0</span><span class="p">}</span>
+<span class="nb">setmetatable</span><span class="p">(</span><span class="n">t</span><span class="p">,{</span><span class="n">__index</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">m</span><span class="p">[</span><span class="n">k</span><span class="p">]</span>
+<span class="k">end</span><span class="p">})</span>
+<span class="k">for</span> <span class="n">i</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="mi">1000000</span><span class="p">,</span><span class="mi">1</span> <span class="k">do</span>
+    <span class="n">t</span><span class="p">.</span><span class="n">cnt</span> <span class="o">=</span> <span class="n">t</span><span class="p">.</span><span class="n">cnt</span> <span class="o">+</span> <span class="mi">1</span>
+<span class="k">end</span>
+<span class="n">ngx</span><span class="p">.</span><span class="n">say</span><span class="p">(</span><span class="n">t</span><span class="p">.</span><span class="n">cnt</span><span class="p">)</span>
+
+</code></pre></div></div>
+<p>都非常快。</p>
+
+<p>在我的老mac air上跑出
+Requests per second:    586.42 [#/sec] (mean)</p>
 
 
                 <hr style="visibility: hidden;">
 
                 <ul class="pager">
                     
-                    
-                    <li class="next">
+                    <li class="previous">
                         <a href="/2017/09/27/nginx-summary/" data-toggle="tooltip" data-placement="top" title="Nginx小记">
-                        Next<br>
+                        Previous<br>
                         <span>Nginx小记</span>
                         </a>
                     </li>
+                    
                     
                 </ul>
 

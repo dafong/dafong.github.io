@@ -184,6 +184,33 @@
             ">
     			
 <div class="post-preview">
+    <a href="/2017/10/24/not-use-ngx-ctx/">
+        <h2 class="post-title">
+            不要使用ngx.ctx
+        </h2>
+        
+        <h3 class="post-subtitle">
+            
+        </h3>
+        
+        <div class="post-content-preview">
+            openresty 由于在处理一个请求的时候是使用一个协程来处理，所以一个woker进程在同一时间内是有可能处理
+多个请求的。在实现一个简单的web框架的时候，我们避免不了要将一些数据结构绑定到一个请求的生命周期上，那
+么如何做呢？openresty官方的文档上提供了以下几种做法：
+
+方法
+
+使用ngx.var
+使用ngx.var有很大的局限，比如说这东西不能create on-the-fl...
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Dafong on October 24, 2017
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2017/09/27/nginx-summary/">
         <h2 class="post-title">
             Nginx小记
@@ -261,6 +288,10 @@ nginx location 匹配规则
                         
                             
                         
+                            
+                                <a href="/tags/#openresty" title="openresty" rel="2">
+                                    openresty
+                                </a>
                             
                         
                     </div>
