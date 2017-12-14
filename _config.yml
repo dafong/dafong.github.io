@@ -1,6 +1,6 @@
 # Site settings
 title: Dafong Blog
-SEOTitle: Dafone的博客 | Dafone的博客 Blog1
+SEOTitle: Dafone的博客 | Dafone的博客 Blog
 header-img: img/home-bg.jpg
 email: wormlucky@gmail.com
 description: ""
@@ -67,7 +67,7 @@ netease_comment: false
 
 # Sidebar settings
 sidebar: true                           # whether or not using Sidebar.
-sidebar-about-description: "Test111"
+sidebar-about-description: "Me"
 #sidebar-avatar: /img/avatar-hux.jpg      # use absolute URL, seeing it's used in both `/` and `/about/`
 
 

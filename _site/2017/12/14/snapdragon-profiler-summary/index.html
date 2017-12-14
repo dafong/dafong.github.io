@@ -10,7 +10,7 @@
     <meta name="keywords"  content="">
     <meta name="theme-color" content="#000000">
     
-    <title>Dafone的博客 | Dafone的博客 Blog1</title>
+    <title>Snapdragon Profiler 小记 - Dafone的博客 | Dafone的博客 Blog1</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -19,7 +19,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
     
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2017/12/14/snapdragon-profiler-summary/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -153,195 +153,184 @@
 </script>
 
 
-    <!-- Page Header -->
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/" width="0" height="0"> -->
+
+<!-- Post Header -->
+<style type="text/css">
+    header.intro-header{
+        position: relative;
+        background-image: url('/')
+    }
+
+    
+    header.intro-header .header-mask{
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        background: rgba(0,0,0, 0.3);
+    }
+    
+</style>
+<header class="intro-header" >
+    <div class="header-mask"></div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1 ">
-                <div class="site-heading">
-                    <h1>Dafong Blog</h1>
-                    <!--<hr class="small">-->
-                    <span class="subheading"></span>
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/tags/#unity" title="unity">unity</a>
+                        
+                    </div>
+                    <h1>Snapdragon Profiler 小记</h1>
+                    
+                    
+                    <h2 class="subheading"></h2>
+                    
+                    <span class="meta">Posted by Dafong on December 14, 2017</span>
                 </div>
             </div>
         </div>
     </div>
 </header>
 
-<!-- Main Content -->
-<div class="container">
-	<div class="row">
-        
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    		<div class="
-                col-lg-8 col-lg-offset-1
-                col-md-8 col-md-offset-1
-                col-sm-12
-                col-xs-12
-                postlist-container
-            ">
-    			
-<div class="post-preview">
-    <a href="/2017/12/14/snapdragon-profiler-summary/">
-        <h2 class="post-title">
-            Snapdragon Profiler 小记
-        </h2>
-        
-        <h3 class="post-subtitle">
-            
-        </h3>
-        
-        <div class="post-content-preview">
-            最近新开了一个RTS项目，在做Demo的时候美术不太清楚场景地形这块怎么去弄，于是想到去参考一下其他游戏的做法，
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+				<p>最近新开了一个RTS项目，在做Demo的时候美术不太清楚场景地形这块怎么去弄，于是想到去参考一下其他游戏的做法，
 之前有试过Intel GPA，但是GPA感觉不是很稳定，在公司的一台Nexus 6上某次成功抓到渲染数据后，后来就再也无法抓取
-了，后来看到了Snapdragon Profiler，官方说是Adreno Profiler的替代版本，刚好手头的测试机也是高通的处理器，于是就下来尝个...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Dafong on December 14, 2017
-    </p>
-</div>
-<hr>
+了，后来看到了Snapdragon Profiler，官方说是Adreno Profiler的替代版本，刚好手头的测试机也是高通的处理器，于是就下来尝个鲜。</p>
 
-<div class="post-preview">
-    <a href="/2017/10/24/not-use-ngx-ctx/">
-        <h2 class="post-title">
-            不要使用ngx.ctx
-        </h2>
+<p><img src="/img/in-post/snapdragon-profiler.png" alt="" /></p>
+
+<h2 id="界面">界面</h2>
+<p>主要分为了这几个部分 DC=draw call</p>
+<ul>
+  <li>
+    <p>Snapshot
+这个主要是提供了当前DC前的渲染结果。可以用鼠标单击某个点，会自动定位到最后的一个DC，然后会在Pixel History窗口显示出该影响该像素颜色的所有的DC历史.</p>
+  </li>
+  <li>
+    <p>Data Explorer
+显示了所有的DC，双击某个DC后，会更新相应的Resources,Drawcall Data等窗口，单击DC可以展开，查看该DC都改变了那些GL状态。</p>
+  </li>
+  <li>
+    <p>Resources
+这里主要显示了该快照里所有的资源包括Texture、Program(shader)，这里有两个选项All，Used，选Used会只过滤出当前双击的DC所使用的纹理和shader</p>
+  </li>
+  <li>
+    <p>Drawcall Data
+这里就是具体的数据了，这里提供了一个导出的功能，不过只能导出obj格式的文件，obj文件是不支持顶点色，uv2等信息的，软件提供的导出属性也只有vertex normal uv1,但通常要分析游戏都会使用更多的属性，好在工具在导出的时候可以选择要将顶点的那些属性作为以上三种导出，而且obj格式也
+很好解析，所以我们可以自己通过多次导出来把自己想要的属性mapping到某个支持的字段上，然后在unity里再反向处理一下就可以完全还原顶点数据，为此我也写了一个简单的映射工具。
+<img src="/img/in-post/exporter.png" alt="" /></p>
+  </li>
+  <li>
+    <p>Shader Analyzer
+在Resource选中某个program以后就可以在这里看到相应的vetex和pixel shader的代码了</p>
+  </li>
+  <li>
+    <p>Image Preview
+在Resource选中某个纹理以后，可以在这里预览并且保存到本地，需要注意的是在安卓设备上，系统提高工的图片加载器是按照图片的原点在左上角加载的，但是在OpenGL里，原点在左下角，所以这里的图片y轴是反的，需要做一次垂直翻转才能得到原始的图片。</p>
+  </li>
+  <li>
+    <p>Program Inspector
+这个也很有用，当我们选中某个program后，这里会显示所有的uniform值。。。</p>
+  </li>
+</ul>
+
+<p>总之感觉分析功能还是很强大的，我也借助他摸清了某个游戏在场景地形方面的实现机制，甚至1:1还原了部分场景。。。感觉他也是一个非常好的学习工具。
+  <img src="/img/in-post/analyze-result.png" alt="" /></p>
+
+<h2 id="注意事项">注意事项</h2>
+<h3 id="no-eligible-processes-found">No eligible processes found</h3>
+<p>有时会发现看不到进程，这时需要把进程杀掉，然后重新连接一下设备，然后先在profiler里Connect，然后再启动相应的进程</p>
+<h3 id="take-too-long-time">Take too long time</h3>
+<p>双击drawcall的时候，有同学反映会非常慢，我这边觉得似乎还能忍受，官方在论坛里也给出了一些建议，主要是在Options里修改System的以下三项</p>
+<ul>
+  <li>DepthStencil Screenshot -&gt; False</li>
+  <li>Full Screenshot -&gt; False</li>
+  <li>Highlight Screenshot -&gt; False</li>
+</ul>
+
+<h3 id="frame-delimeter">Frame delimeter</h3>
+<p>抓剑与*园的时候也发现了抓取过程会卡主，群里也有同学反映某易旗下的游戏似乎都抓不到，后来找到了参考 <a href="https://developer.qualcomm.com/forum/qdn-forums/software/snapdragon-profiler/34240">https://developer.qualcomm.com/forum/qdn-forums/software/snapdragon-profiler/34240</a>
+主要是更改GL Frame Delimiters，我主要是将GL Delimiter里的GL Flush设为了true，这两个游戏就都可以了，似乎高通会在以后的版本里提供UseAutoFrameDelimiter这个选项来自动选择。</p>
+
+
+                <hr style="visibility: hidden;">
+
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2017/10/24/not-use-ngx-ctx/" data-toggle="tooltip" data-placement="top" title="不要使用ngx.ctx">
+                        Previous<br>
+                        <span>不要使用ngx.ctx</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+
+
+                
+
+                
+            </div>
+
+    <!-- Side Catalog Container -->
         
-        <h3 class="post-subtitle">
-            
-        </h3>
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
         
-        <div class="post-content-preview">
-            openresty 由于在处理一个请求的时候是使用一个协程来处理，所以一个woker进程在同一时间内是有可能处理
-多个请求的。在实现一个简单的web框架的时候，我们避免不了要将一些数据结构绑定到一个请求的生命周期上，那
-么如何做呢？openresty官方的文档上提供了以下几种做法：
 
-方法
-
-使用ngx.var
-使用ngx.var有很大的局限，比如说这东西不能create on-the-fl...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Dafong on October 24, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/09/27/nginx-summary/">
-        <h2 class="post-title">
-            Nginx小记
-        </h2>
-        
-        <h3 class="post-subtitle">
-            
-        </h3>
-        
-        <div class="post-content-preview">
-            研究openresty的时候准备自己写一个简单的web framework,以前对nginx的location匹配规则,以及如何在脚本这一端实现一套restful风格的url路由都没有细研究过，这次也算是做个记录。
-
-nginx location 匹配规则
-
-
-  
-    
-      sytax
-      define
-    
-  
-  
-    
-      =
-      精确匹...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Dafong on September 27, 2017
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2017/07/12/hello-blog/">
-        <h2 class="post-title">
-            博客重开
-        </h2>
-        
-        <h3 class="post-subtitle">
-            
-        </h3>
-        
-        <div class="post-content-preview">
-            折腾了几次空间以后终于把之前的Blog给折腾没了，之所以折腾来折腾去最主要的原因还是为了跟“墙“作斗争，买来的VPN比起租VPS来虽说是惠而不费，但是身为一个搞技术的，多多少少还是用自己一手搭建起来的舒服，况且有个VPS还能搞一些其他的事情。
-
-最早我都是用linode的VPS，用了也有快两年有余吧，东京节点，一直都是相安无事的，无奈后来是树大招风，最终是给ban掉了。老佟给我推荐过美国的搬...
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Dafong on July 12, 2017
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-
-    		</div>
     <!-- Sidebar Container -->
             <div class="
-                col-lg-3 col-lg-offset-0
-                col-md-3 col-md-offset-0
-                col-sm-12
-                col-xs-12
-                sidebar-container
-            ">
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
                 <!-- Featured Tags -->
                 
                 <section>
                     <hr class="hidden-sm hidden-xs">
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
-                        
+        				
                             
-                        
+        				
                             
-                                <a href="/tags/#openresty" title="openresty" rel="2">
+                				<a href="/tags/#openresty" title="openresty" rel="2">
                                     openresty
                                 </a>
                             
-                        
+        				
                             
-                        
-                    </div>
+        				
+        			</div>
                 </section>
                 
 
-                <!-- Short About -->
-                <section class="visible-md visible-lg">
-                    <hr><h5><a href="/about/">ABOUT ME</a></h5>
-                    <div class="short-about">
-                        
-                        
-                            <p>Test111</p>
-                        
-                        <!-- SNS Link -->
-                        <ul class="list-inline">
-                            
-                            
-                            
-                            
-                            
-                            
-                            
-                        </ul>
-                    </div>
-                </section>
                 <!-- Friends Blog -->
                 
                 <hr>
@@ -350,10 +339,53 @@ nginx location 匹配规则
                     
                 </ul>
                 
-    		</div>
-        
-	</div>
-</div>
+            </div>
+        </div>
+    </div>
+</article>
+
+
+
+
+
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'always',
+          placement: 'right',
+          icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
+
 
 
     <!-- Footer -->
@@ -464,6 +496,50 @@ nginx location 匹配规则
 
 
 <!-- Side Catalog -->
+
+<script type="text/javascript">
+    function generateCatalog (selector) {
+        var P = $('div.post-container'),a,n,t,l,i,c;
+        a = P.find('h1,h2,h3,h4,h5,h6');
+        a.each(function () {
+            n = $(this).prop('tagName').toLowerCase();
+            i = "#"+$(this).prop('id');
+            t = $(this).text();
+            c = $('<a href="'+i+'" rel="nofollow">'+t+'</a>');
+            l = $('<li class="'+n+'_nav"></li>').append(c);
+            $(selector).append(l);
+        });
+        return true;
+    }
+
+    generateCatalog(".catalog-body");
+
+    // toggle side catalog
+    $(".catalog-toggle").click((function(e){
+        e.preventDefault();
+        $('.side-catalog').toggleClass("fold")
+    }))
+
+    /*
+     * Doc: https://github.com/davist11/jQuery-One-Page-Nav
+     * Fork by Hux to support padding
+     */
+    async("/js/jquery.nav.js", function () {
+        $('.catalog-body').onePageNav({
+            currentClass: "active",
+            changeHash: !1,
+            easing: "swing",
+            filter: "",
+            scrollSpeed: 700,
+            scrollOffset: 0,
+            scrollThreshold: .2,
+            begin: null,
+            end: null,
+            scrollChange: null,
+            padding: 80
+        });
+    });
+</script>
 
 
 
